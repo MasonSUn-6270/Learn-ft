@@ -114,3 +114,21 @@ def add_layer(inputs,in_size,out_size,activation_func=None):
     
 ```
 
+# 定义
+
+###### Variable
+
+###### matmul
+
+###### constant
+
+###### global_variables_initializer
+
+###### +-X\
+
+```
+add
+multiply
+subtract
+divide
+```
