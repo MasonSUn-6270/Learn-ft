@@ -1,8 +1,19 @@
+| random                    | math           | indexing               |      |      |      |
+| ------------------------- | -------------- | ---------------------- | ---- | ---- | ---- |
+| [uniform](#uniform)       | [dot](#np.dot) | [newaxis](#np.newaxis) |      |      |      |
+| [rand0-1](#rand 0~1 普通) | [log](#np.log) |                        |      |      |      |
+| [randn](#randn 正态分布)  |                |                        |      |      |      |
+| [random](#random list)    |                |                        |      |      |      |
+|                           |                |                        |      |      |      |
+|                           |                |                        |      |      |      |
+
+
+
 ## 生成数列
 
 ### random
 
-uniform
+###### uniform
 
 ```python
 np.random.uniform(1,4,(2,2))
@@ -10,7 +21,7 @@ array([[2.9115306 , 1.28712475],
        [2.47876216, 3.77389895]])
 ```
 
-rand 0~1 普通
+###### rand 0~1 普通
 
 ```python
 >>> np.random.rand(3,2)
@@ -20,7 +31,7 @@ array([[ 0.14022471,  0.96360618],  #random
 
 ```
 
-randn 正态分布
+###### randn 正态分布
 
 ```python
 np.random.randn(3,4)
@@ -30,7 +41,7 @@ array([[-0.34325048, -1.53979334,  0.05410959,  0.5584472 ],
 
 ```
 
-random （ [ ]）
+###### random list
 
 ```python
 np.random.random([4,5])
