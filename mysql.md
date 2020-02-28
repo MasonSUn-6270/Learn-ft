@@ -9,11 +9,13 @@
 
 ###### login
 
-```w
+```cmd
 mysql -u tsxx736 -h rm-uf641076h06m5vvtayo.mysql.rds.aliyuncs.com -p
 ```
 
-
+```python
+account = ("rm-uf641076h06m5vvtayo.mysql.rds.aliyuncs.com", "tsxx736", '******', 'interest')
+```
 
 ###### 修改执行语句
 
