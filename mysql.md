@@ -17,6 +17,14 @@ mysql -u tsxx736 -h rm-uf641076h06m5vvtayo.mysql.rds.aliyuncs.com -p
 account = ("rm-uf641076h06m5vvtayo.mysql.rds.aliyuncs.com", "tsxx736", '******', 'interest')
 ```
 
+###### **返回字典**
+
+```python
+cursor(cursor = pymysql.cursors.DictCursor)
+```
+
+
+
 ###### 修改执行语句
 
 ```mysql
@@ -49,10 +57,16 @@ ALTER TABLE tb_article MODIFY COLUMN NAME CHAR(50);
 
 ##### 表
 
+##### drop
+
+drop table  if exists user  ;
+
 ###### 复制表
 
 ```mysql
-CREATE TABLE newuser LIKE user;
+create table badsun like sunning1;
+
+insert into badsun select * from sunning1 where qualityStar=1;
 ```
 
 ###### 修改表名：alter table old_table rename to new_table;
