@@ -35,11 +35,11 @@ http://www.360doc.com/content/19/0304/13/13328254_819122049.shtml
 
 ###### 数学
 
-|      |      |
-| ---- | ---- |
-| //   | div  |
-| %    | mod  |
-|      |      |
+| pow（a,b） | a**b |
+| ---------- | ---- |
+| //         | div  |
+| %          | mod  |
+|            |      |
 
 ![img](https://images2015.cnblogs.com/blog/822428/201512/822428-20151231094010557-1124781943.png)
 
@@ -72,7 +72,15 @@ select   (@i:=@i+1)   as   i,t.n_sale   from   erp t,(select   @i:=0)   as   it 
 select * from tableName limit i,n
 ```
 
-###### 唯一指
+##### 结果加序号
+
+```mysql
+简单实例：select  (@i:=@i+1)  i,user_id from  erp ,(select   @i:=0)   as   it ORDER BY t.user_id desc;
+```
+
+##### 联合group
+
+##### 唯一指
 
 ```mysql
 select distinct n_sale from erp;
@@ -116,7 +124,17 @@ FROM Employee AS a, Employee AS b
 ;
 ```
 
-#### 字段截取
+### 高级操作
+
+#### leetcode
+
+https://leetcode-cn.com/problems/queries-quality-and-percentage/comments/ --两表筛选后join会丢失数据
+
+https://leetcode-cn.com/problems/game-play-analysis-iii/comments/ -- @i:=xxx 判断
+
+#### ot
+
+##### 字段截取
 
 ```
 1、left(str,index) 从左边第index开始截取
@@ -176,7 +194,7 @@ select emp_name,concat_ws(" : ",emp_name,salary) as aa from employee;
 select emp_name,concat_ws(" : ",emp_name,salary*12) as aa from employee;
 ```
 
-##### 子查询
+#### 子查询
 
 >    标量子查询（结果集只有一行一列）
 >    列子查询（结果集只有一列多行）
@@ -295,5 +313,147 @@ from (
 where 排名 <= N;
 
 
+```
+
+#### case
+
+```mysql
+ select *,case when brand='宝马' then '高级品牌' 
+ when brand='宝马' then '高级品牌' 
+ when brand='宝马' then '高级品牌' 
+ when brand='宝马' then '高级品牌' 
+ 
+ 
+ 
+ else '我觉得普通' end com from bp;
+
+```
+
+or
+
+```
+ select *,case brand when '宝马' then '高级品牌' 
+ when '宝马' then '高级品牌'
+ when '宝马' then '高级品牌'
+ when '宝马' then '高级品牌'
+ 
+ 
+ 
+ else '我觉得普通' end com from bp;
+```
+
+###### case有elif的作用
+
+```mysql
+select *,
+case 
+	when p>3000 then 'super'
+	when p>1000 then 'good'
+	else 'normal'
+end mark
+
+
+ from bp
+
+```
+
+
+
+#### if
+
+```mysql
+select if((....or....and....),'yes','no') from .....
+```
+
+
+
+
+
+#### select 单字
+
+```mysql
+select 
+(
+select sum(花费分)/100 as card_car from run_car where 宝贝名称 like '%电话卡%' 
+),
+(
+select sum(erp.n_sale) as all_card_sell from erp where c_discode like '%电话卡%'
+)
+```
+
+####  (select @i:=100)
+
+```mysql
+ select (@i:=@i+5),bp.* from  (select @i:=100)a,bp
+```
+
++ ###### if
+
++ 
+
+  ```mysql
+  select if(c_countyname='日本',(@i:=@i+1),0),a.* from
+  
+  (select cast(d_date as date) as dd,c_countyname,sum(n_sale) from erp where cast(d_date as date)<'2020-1-6' group by dd,c_countyname order by dd)a,
+  (select @i:=1)b
+  ```
+
+  
+
++----------------------------------------+------------+--------------+-------------+
+| if(c_countyname='日本',(@i:=@i+1),0)   | dd         | c_countyname | sum(n_sale) |
++----------------------------------------+------------+--------------+-------------+
+|                                      0 | 2020-01-01 | .0           |       13086 |
+|                                      0 | 2020-01-01 | 台湾         |          68 |
+|                                      0 | 2020-01-01 | 塞班         |         190 |
+|                                      0 | 2020-01-01 | 新加坡       |         397 |
+|                                      2 | 2020-01-01 | 日本         |        1814 |
+|                                      0 | 2020-01-01 | 欧洲18国     |        1584 |
+|                                      0 | 2020-01-01 | 泰国         |        2410 |
+|                                      0 | 2020-01-01 | 美国         |         520 |
+|                                      0 | 2020-01-01 | 韩国         |        1145 |
+|                                      0 | 2020-01-02 | .0           |       10330 |
+|                                      0 | 2020-01-02 | 东南亚       |         233 |
+|                                      0 | 2020-01-02 | 全球         |         162 |
+|                                      0 | 2020-01-02 | 新加坡       |        1351 |
+|                                      3 | 2020-01-02 | 日本         |        2674 |
+|                                      0 | 2020-01-02 | 欧洲18国     |        2515 |
+|                                      0 | 2020-01-02 | 泰国         |        3695 |
+|                                      0 | 2020-01-02 | 美国         |         970 |
+|                                      0 | 2020-01-02 | 阿联酋       |         636 |
+
++ case
+
+  ```mysql
+  
+  select a.*,
+  case
+  	when @i = id then @n:=@n+1
+  	when @i := id then @n:=1
+  end mytry
+  from
+  
+  
+  (select * from game order by id
+  )a,
+  (select @i:=0,@n:=0)b
+  
+  ```
+
+  +------+------+-------+
+  | id   | num  | mytry |
+  +------+------+-------+
+  |    1 |    1 |     1 |
+  |    2 |    0 |     1 |
+  |    3 |    1 |     1 |
+  |    3 |    1 |     2 |
+  |    3 |    1 |     3 |
+  |    4 |    1 |     1 |
+  +------+------+-------+
+
+#### union 、 union all
+
+```
+select * from erp union all selet * from allerp
 ```
 
