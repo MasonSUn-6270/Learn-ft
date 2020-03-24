@@ -5,17 +5,17 @@
 ###### 日期-国家
 
 ```mysql
-select cast(d_date as date) dd,sum(n_sale),
-sum(case when c_countyname ='日本' then n_sale end ) 日本,
-sum(case c_countyname when '韩国' then n_sale end ) 韩国,
-sum(case c_countyname when '全球' then n_sale end ) 全球,
-sum(case c_countyname when '美国' then n_sale end ) 美国,
-sum(case c_countyname when '澳大利亚' then n_sale end ) 澳大利亚,
-sum(case c_countyname when '欧洲' then n_sale end ) 欧洲,
-sum(case c_countyname when '英法俄' then n_sale end ) 英法俄,
-sum(case c_countyname when '中国' then n_sale end ) 中国
+select cast(d_date as date) dd,
+ifnull(sum(case when c_countyname ='日本' then n_sale end ),0) 日本,
+ifnull(sum(case c_countyname when '韩国' then n_sale end ),0) 韩国,
+ifnull(sum(case c_countyname when '全球' then n_sale end ),0) 全球,
+ifnull(sum(case c_countyname when '美国' then n_sale end ),0) 美国,
+ifnull(sum(case c_countyname when '澳大利亚' then n_sale end ),0) 澳大利亚,
+ifnull(sum(case c_countyname when '欧洲' then n_sale end ),0) 欧洲,
+ifnull(sum(case c_countyname when '英法俄' then n_sale end ),0) 英法俄,
+ifnull(sum(case c_countyname when '中国' then n_sale end ),0) 中国
 
- from allerp where c_custname='携程客户' and cast(d_date as date)>='2020-2-1' group by cast(d_date as date) order by cast(d_date as date);
+ from allerp where c_custname='携程客户'  group by cast(d_date as date) order by cast(d_date as date);
 ```
 
 ###### 各渠道价格
