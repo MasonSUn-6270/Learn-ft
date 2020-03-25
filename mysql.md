@@ -457,3 +457,26 @@ select sum(erp.n_sale) as all_card_sell from erp where c_discode like '%电话�
 select * from erp union all selet * from allerp
 ```
 
+###### 用户变量if
+
+```mysql
+select d.Name as Department,e.Name as Employee,e.Salary
+from Employee as e 
+inner join Department as d 
+on e.DepartmentId = d.Id 
+inner join (
+    select DepartmentId,Salary,@n := if(DepartmentId = @pre,@n+1,1),@pre := DepartmentId
+    from
+    (
+        select distinct DepartmentId,Salary
+        from Employee 
+        order by DepartmentId,Salary desc
+    ) as t1,(select @n := 1,@pre := null) as t2
+    where @n < 3 or DepartmentId <> @pre
+) as t 
+on e.DepartmentId = t.DepartmentId and e.Salary = t.Salary
+order by Department,Salary desc;
+
+
+```
+
