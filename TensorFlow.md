@@ -94,7 +94,103 @@ for i in range(1000):
   sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 ```
 
+# 控制会话 Session
+
+```python
+with tf.session as f:  #激活
+    res = f.run(product)
+    print(res)
+    
+```
+
+# 变量
+
+## Variable 变量
+
+```python
+v = tf.Variable(0,name='hello')
+print(v.name)
+```
+
+## 常量
+
+```python
+one = tf.constant(1)
+```
+
+## 赋值 assign
+
+```python
+update = tf.assign(v,tf.add(v+one))
+```
+
+## 初始化
+
+```python
+init = tf.initialize_all_variables()  # must have ! if defined variable
+```
+
+
+
+## 完整案例
+
+```python
+import tensorflow as tf
+
+# 初始
+state = tf.Variable(0)  # 变量
+one  = tf.constant(1)  # 常量
+
+# ‘=’还是赋值，只不过不能直接使用
+new_value  = tf.add(state,one) # 数学运算
+update = tf.assign( state , new_value )
+
+init = tf.initialize_all_variables()
+
+with tf.session as f :
+    f.run(init)     # 调用初始化
+    for _ in range(3):
+        f.sun(update)  #执行
+        print(f.run(state))  # print结果
+```
+
+# placeholder
+
+```python
+input1 = tf.placeholder(tf.float32)
+
+with tf.Session() as f:
+	print(sess.run(input1,feed_dict={ input1:[13.] }))
+```
+
+
+
+
+
+
+
+
+
 # 激励函数
+
+- 为什么需要激励函数？
+
+  - Linear线性问题  Nonlinear 非线性问题
+  -  y =W x
+  - y = AF(W x)
+
+- **卷积**神经网络
+
+  - *Relu*
+
+- **循环**神经网络  
+
+  - *Sigmoid*
+  - *Tanh*
+
+  
+
+
 
 ## 定义激励层
 
@@ -113,6 +209,8 @@ def add_layer(inputs,in_size,out_size,activation_func=None):
      return output
     
 ```
+
+
 
 # 定义
 
