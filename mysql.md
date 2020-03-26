@@ -480,3 +480,20 @@ order by Department,Salary desc;
 
 ```
 
+###### 自定义列
+
+```mysql
+(select 'desktop' as platform union
+ select 'mobile' as platform union
+ select 'both' as platform
+)
+
+ 
+```
+
+按指定顺序排序
+
+```mysql
+order by field(platform,'desktop','mobile','both')
+```
+
