@@ -1,3 +1,241 @@
+
+
+
+
+# 优化
+
+## linux配置
+
+## MYSQL分层、存储引擎
+
+### 分层知识点
+
+1. 连接层
+2. 服务层
+   1. 提供这次查询的业务接口
+   2. 提供SQL优化器 （Mysql Query Optimizer）
+3. 引擎层
+   1. *InnoDB*   **事务** **并发**  锁：行锁
+   2. MyISAM **查询效率**   锁：表锁
+4. 存储层
+
+### 引擎设置
+
+当前支持引擎
+
+```mysql
+show engines;
+```
+
+当前使用引擎
+
+```mysql
+ show variables like '%storage_engine%'
+```
+
+​	指定表 引擎
+
+```mysql
+create table sample(
+id int(4) auto_increment,
+    name varchar(5),
+    dept varchar(5),
+    primary key (id)
+)ENGINE=MyISAM  /* 设置引擎 */
+AUTO_INCREMENT=1 /*自增步长*/
+DEFAULT CHARSET =utf8
+;
+```
+
+## 常见问题
+
+- 链接查询
+- 索引失效
+- 服务参数设置不佳
+
+## sql语句与引擎实际解析
+
+```mysql
+/*语法*/
+select..from..join..on..where..group by..having..order by ..
+
+/* 解析 */
+from .. on ..join..where..group by ...having ..selcet  ..order by 
+
+```
+
+## 索引
+
+### 概念
+
+- primary key 也是一种唯一索引
+
+- 相当于目录
+
+- index
+
+- 官方：索引是一种帮助sql高效获取数据的数据结构 
+
+  - 索引是树 B树（默认）
+
+  - ​                50
+
+  - ​              /      \
+
+  - ​         28         76                   *这不是B树*
+
+  - ​        /   \         /   \
+
+  -    13      32   **54**    99
+
+  -    /   \
+
+  - 1      14
+
+     *打比方*   实例： 减低IO使用率
+
+    | id |
+
+    | 1|
+
+    | 2|
+
+    ...
+
+    | **54**|
+
+    select * from .. where id = 54 :sweat_smile: 会历遍id字段 需要54步
+
+    如果是在树中查找 50:arrow_right:75 :arrow_right: **54**  只需要3步 :laughing:
+
+  - 索引指向行所在的存储空间 like 0x3a  ,  0xf4.....
+
+### 索引列注意事项
+
+- 不要选择频繁更行的字段
+- 不要用很少使用的字段
+- :exclamation: 索引会降低 增删改 的效率
+
+### 优势
+
+- 提升IO使用率
+- 降低CPU使用率
+
+### 分类
+
+- 单值索引  （单列 一个表可以有多个）
+- 唯一索引 （不能重复 一般用ID）
+- 符合索引 （多个列构成的索引）
+
+### 语法
+
+- add
+  - 方式一	
+
+    ```mysql
+    create /* + unique 为唯一索引*/ index  index_name on erp(id)  /*单值索引*/
+    
+    ```
+
+
+```mysql
+    create index index_name on erp(c_city,id)    /*复合索引*/
+    
+```
+
+  - 	方式二
+
+    ```mysql
+    alter table erp add /*unique*/index index_name(dept,id)
+    ```
+
+- 删除
+
+  ```mysql
+  drop index index_name on erp;
+  ```
+
+- 查看
+
+  ```mysql
+  show index from erp;
+  ```
+
+## 优化计划 ID tpye..
+
+- ```mysql
+  explain sql语句
+  ```
+
+1. ID
+
+   1. ID大小
+      1. 相同，从上往下顺序执行
+      2. 不同 从大往小	
+   2. 小表驱动大表
+   3. 子查询 先内层再外层
+
+2. select_type 查询类型
+
+   1. :notebook_with_decorative_cover: PRIMARY 主查询
+   2. :business_suit_levitating: SUBQUERY
+
+3. type 索引类型
+
+   1. system >const>eq ref >**ref** >**range**>**index**>all
+
+      1. system,const  实际不可能达到
+
+      2. eq ref  常见于 **唯一索引** 和**主键索引**
+
+         1. ```mysql
+            alter table erp add constraint xxxx primary key(id)
+            ```
+
+         2. 
+
+            ```mysql
+            alter table erp add constraint xxxx unique index(id)
+            ```
+
+      3. ref 
+
+         - 非唯一索引
+         - 返回多行
+
+      4. range
+
+         - where 后 索引列
+           - between
+           - in   (有时候会索引失效)
+           - \>
+           - \<
+
+      5. index  
+
+         - 查询索引列  
+
+         - ```mysql
+           select ID from erp
+           ```
+
+      6. all
+
+         - 查询非索引所有数据
+         - select N_sale from erp
+
+4. possible key
+
+5. key 实际用到的索引
+
+   
+
+------
+
+
+
+# 基础
+
 | base                          | select              | alter                                                        |      |      |      |
 | ----------------------------- | ------------------- | ------------------------------------------------------------ | ---- | ---- | ---- |
 | [修改执行符号](#修改执行语句) | [limit](#limit)     | [modify](#列属性)                                            |      |      |      |
